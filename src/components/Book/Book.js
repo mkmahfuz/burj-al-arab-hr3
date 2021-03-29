@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 
@@ -8,23 +8,36 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
+import { UserContext } from '../../App';
+import Bookings from '../Bookings/Bookings';
 
 const Book = () => {
     const { bedType } = useParams();
+    const [loggedInUser, setLoggedInUser] = useContext(UserContext);
     const [selectedDate, setSelectedDate] = useState({checkIn: new Date(),checkOut: new Date()});
 
     const handleCheckInDate = (date) => {
-        const newDates = {...setSelectedDate};
+        const newDates = {...selectedDate};
         newDates.checkIn = date;
         setSelectedDate(newDates);
     };
     const handleCheckOutDate = (date) => {
-        const newDates = {...setSelectedDate};
+        const newDates = {...selectedDate};
         newDates.checkOut = date;
         setSelectedDate(newDates);
     }; 
 
     const handleBooking = ()=>{
+        const newBooking = {...loggedInUser,...selectedDate};
+        fetch('http://localhost:4000/addBooking',{
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(newBooking)
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            console.log(data)
+        })
 
     };
 
@@ -66,6 +79,7 @@ const Book = () => {
                     Book Now
                     </Button>
             </MuiPickersUtilsProvider>
+            <Bookings></Bookings>
         </div>
     );
 };
