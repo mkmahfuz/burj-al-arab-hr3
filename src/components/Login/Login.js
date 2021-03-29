@@ -22,7 +22,7 @@ const Login = () => {
             const signedInUser = {name: displayName, email} 
             setLoggedInUser(signedInUser);
             storeAuthToken();
-            history.replace(from);
+            //history.replace(from); // aita ke session set korer por replace korbo
             // ...
           }).catch(function(error) {
             const errorMessage = error.message;
@@ -35,6 +35,7 @@ const Login = () => {
             .then(function(idToken) {
                 // Send token to your backend via HTTPS
                 sessionStorage.setItem('token', idToken);
+                history.replace(from); // aita upore silo, akhane boshalam
                 console.log(idToken);
               }).catch(function(error) {
                 // Handle error
